@@ -13,7 +13,7 @@ One-click Railway template for [Wiki-Go](https://github.com/leomoon-studios/wiki
 The `Dockerfile` adds one small helper, `wiki-go-init` (source in [`init/`](init/main.go)), which runs before Wiki-Go on every start:
 
 - **First boot:** writes `data/config.yaml` with one admin user from `WIKI_ADMIN_USERNAME` / `WIKI_ADMIN_PASSWORD` (bcrypt), so upstream's default `admin`/`admin` account is never created.
-- **Every boot:** listens on `$PORT`, trusts Railway's proxy range (`100.64.0.0/10`) for client IPs so the login ban works per visitor, keeps cookies Secure, and replaces any admin password that is still the upstream default.
+- **Every boot:** listens on `$PORT`, trusts Railway's proxy headers for client IPs (Railway's edge rewrites `X-Forwarded-For` to the visitor's address plus a rotating edge IP), so the login ban works per visitor, keeps cookies Secure, and replaces any admin password that is still the upstream default.
 - Railway volumes are owned by root, so it gives `/wiki/data` to the image's `appuser` (uid 1000), drops to that user and then execs Wiki-Go. Any setup error exits non-zero, so Railway restarts the deploy instead of running an unsafe wiki.
 
 ## Variables

@@ -16,6 +16,8 @@ COPY --from=init /wiki-go-init /usr/local/bin/wiki-go-init
 USER root
 WORKDIR /wiki
 
+# Railway's edge rewrites X-Forwarded-For to "<visitor>, <edge IP>" (edge IPs
+# vary), so every hop is trusted and Wiki-Go's login ban keys on the visitor.
 ENV PORT=8080 \
     TZ=UTC \
     CONFIGFILE=/wiki/data/config.yaml \
